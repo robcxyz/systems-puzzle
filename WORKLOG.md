@@ -39,54 +39,59 @@ Check network
 ### Check location of nginx mapping for conf 
 
 ```bash
-docker exec -it systems-puzzle_nginx_1 /bin/bash
+docker exec -it systems-puzzle_nginx_1 cat /etc/nginx/conf.d/flaskapp.conf
 ```
-
-
 
 ### Switched ports on nginx 
 
-```bash 
-
-
+flaskapp.conf
 ```
+proxy_pass http://flaskapp:5000;
+```
+
 ## Flask app 
 
 Probably good 
 
 ```bash
-systems-puzzle_flaskapp_1
-
+docker logs systems-puzzle_flaskapp_1
 ```
 
-
-
+Needed to fix Dockerfile to right port
 
 ## Postgres 
 
-Check environment variables 
+Check environment variables -> ok
 
 ### Expose ports 5432 on docker compose 
 
-```yaml 
-...
+```yaml
+services:
+  db:
     ports:
       - "5432:5432"
-...
 ```
 
 ### Check networking 
 
 ```bash
-docker exec -it 
+docker exec -it systems-puzzle_db_1 /bin/bash
 apt update 
-apt install netcat 
+apt install netcat -y
 ```
 
+No need as the tables were populated at this point. 
 
+### Verify 
+
+```bash
+psql -h localhost -U docker_pg flaskapp_db
+>> select * from items;
+```
+
+Works!!
 
 ## Beyond
- 
  
 ### Kubernetes 
 
